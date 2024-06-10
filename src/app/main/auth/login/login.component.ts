@@ -23,6 +23,7 @@ export class LoginComponent implements OnInit {
     submitted = false;
     errorMessage: string;
     hide = true;
+    captcha:string;
 
     /**
      * Constructor
@@ -61,7 +62,11 @@ export class LoginComponent implements OnInit {
             this.router.navigate(["/"]);
         }
     }
-
+loadCaptcha(){
+    this.authenticationService.getCaptcha().subscribe((data)=>{
+        this.captcha='data:image/jpg;base64,'+data["Data"].Img;
+    });
+}
     // -----------------------------------------------------------------------------------------------------
     // @ Lifecycle hooks
     // -----------------------------------------------------------------------------------------------------
@@ -73,6 +78,7 @@ export class LoginComponent implements OnInit {
         this.loginForm = this._formBuilder.group({
             username: ["", [Validators.required]],
             password: ["", Validators.required],
+            captcha: ["", Validators.required],
         });
 
         // get return url from route parameters or default to '/'
@@ -80,7 +86,7 @@ export class LoginComponent implements OnInit {
         // this.returnUrl = this.route.snapshot.queryParams["returnUrl"] || "/opd/registration";
 
         this.returnUrl = this.route.snapshot.queryParams["returnUrl"] || "/dashboard";
-        
+        this.loadCaptcha();
     }
 
     // convenience getter for easy access to form fields

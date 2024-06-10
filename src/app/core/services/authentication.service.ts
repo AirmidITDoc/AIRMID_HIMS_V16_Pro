@@ -21,7 +21,7 @@ export class AuthenticationService {
      */
     navigation: any;
     constructor(
-        
+
         private router: Router, private http: HttpClient,
         public _httpClient: HttpClient,
         private _fuseNavigationService: FuseNavigationService,
@@ -31,9 +31,12 @@ export class AuthenticationService {
         );
         this.currentUser = this.currentUserSubject.asObservable();
     }
-
+    apiUrl = "http://localhost:5251/api/v1";
     public get currentUserValue(): User {
         return this.currentUserSubject.value;
+    }
+    getCaptcha(): Observable<any> {
+        return (this.http.get(`${this.apiUrl}/Login/GetCaptcha`));
     }
 
     login(userName: string, password: string) {
@@ -187,7 +190,7 @@ export class AuthenticationService {
         //     });
 
     }
-    
+
 
 
 }

@@ -1,3 +1,4 @@
 {
-    "url": "http://localhost:63750/api"
+    "url": "http://localhost:63750/api",
+    "NewUrl":"http://localhost:5251/api/v1"
 }

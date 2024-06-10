@@ -51,7 +51,15 @@
                         Password is required
                     </mat-error>
                 </mat-form-field>
-
+    <img [src]="captcha" />
+    <mat-icon>refresh</mat-icon>
+    <mat-form-field appearance="outline">
+        <mat-label>Captcha</mat-label>
+        <input matInput type="text" formControlName="captcha" />
+        <mat-error>
+            Captcha is required
+        </mat-error>
+    </mat-form-field>
                 <!-- <div
                     class="remember-forgot-password"
                     fxLayout="row"

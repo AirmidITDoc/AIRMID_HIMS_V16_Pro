@@ -6,10 +6,12 @@ import SampleJson from './../assets/url.json';
 
 export class AppConfig {
 	apiEndpoint: string;	
+    newApiEndPoint:string;
 }
 
 export const APP_DI_CONFIG: AppConfig = {
-  apiEndpoint: SampleJson["url"]
+  apiEndpoint: SampleJson["url"],
+  newApiEndPoint:SampleJson["NewUrl"]
 };
 
 @NgModule({

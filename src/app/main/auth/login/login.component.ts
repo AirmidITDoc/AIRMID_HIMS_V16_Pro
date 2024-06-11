@@ -28,7 +28,7 @@ export class LoginComponent implements OnInit {
         private router: Router,
         private route: ActivatedRoute,
         private authenticationService: AuthenticationService,
-        private serverMonitoringService: ServerMonitoringService,
+        private serverMonitoringService: ServerMonitoringService
     ) {
         // Configure the layout
         this._fuseConfigService.config = {

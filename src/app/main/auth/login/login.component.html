@@ -41,8 +41,8 @@
                     </mat-error>
                 </mat-form-field>
                 <img [src]="captcha" />
-                <mat-icon (click)="loadCaptcha()">refresh</mat-icon>
-                <mat-form-field appearance="outline">
+                <mat-icon (click)="loadCaptcha()" style="font-size: 45px;width: 40px;height: 50px;cursor: pointer;">refresh</mat-icon>
+                <mat-form-field appearance="outline" style="margin-top: 15px;">
                     <mat-label>Captcha</mat-label>
                     <input matInput type="text" formControlName="CaptchaCode" />
                     <mat-error>

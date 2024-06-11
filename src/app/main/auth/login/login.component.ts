@@ -1,13 +1,11 @@
 import { Component, OnInit, ViewEncapsulation } from "@angular/core";
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from "@angular/forms";
+import { FormGroup, UntypedFormBuilder, Validators } from "@angular/forms";
 
 import { FuseConfigService } from "@fuse/services/config.service";
 import { fuseAnimations } from "@fuse/animations";
 import { Router, ActivatedRoute } from "@angular/router";
 import { AuthenticationService } from "app/core/services/authentication.service";
-import Swal from "sweetalert2";
 import { ServerMonitoringService } from "app/core/services/servermonitoring.service";
-import { setInterval, setTimeout } from "timers";
 
 @Component({
     selector: "login",
@@ -17,27 +15,20 @@ import { setInterval, setTimeout } from "timers";
     animations: fuseAnimations,
 })
 export class LoginComponent implements OnInit {
-    loginForm: UntypedFormGroup;
+    loginForm: FormGroup;
     returnUrl: string;
-    loading = false;
     submitted = false;
     errorMessage: string;
-    hide = true;
-    captcha:string;
-
-    /**
-     * Constructor
-     *
-     * @param {FuseConfigService} _fuseConfigService
-     * @param {FormBuilder} _formBuilder
-     */
+    captcha: string;
+    captchaToken: string;
+    obj: any;
     constructor(
         private _fuseConfigService: FuseConfigService,
         private _formBuilder: UntypedFormBuilder,
         private router: Router,
         private route: ActivatedRoute,
         private authenticationService: AuthenticationService,
-        private serverMonitoringService:ServerMonitoringService,
+        private serverMonitoringService: ServerMonitoringService,
     ) {
         // Configure the layout
         this._fuseConfigService.config = {
@@ -62,79 +53,39 @@ export class LoginComponent implements OnInit {
             this.router.navigate(["/"]);
         }
     }
-loadCaptcha(){
-    this.authenticationService.getCaptcha().subscribe((data)=>{
-        this.captcha='data:image/jpg;base64,'+data["Data"].Img;
-    });
-}
-    // -----------------------------------------------------------------------------------------------------
-    // @ Lifecycle hooks
-    // -----------------------------------------------------------------------------------------------------
-
-    /**
-     * On init
-     */
+    loadCaptcha() {
+        this.authenticationService.getCaptcha().subscribe((data) => {
+            this.captcha = 'data:image/jpg;base64,' + data["Data"].Img;
+            this.captchaToken = data["Data"].Token;
+        });
+    }
     ngOnInit(): void {
         this.loginForm = this._formBuilder.group({
-            username: ["", [Validators.required]],
-            password: ["", Validators.required],
-            captcha: ["", Validators.required],
+            Username: ["", [Validators.required]],
+            Password: ["", Validators.required],
+            CaptchaCode: ["", Validators.required],
         });
-
-        // get return url from route parameters or default to '/'
-        // this.returnUrl = this.route.snapshot.queryParams["returnUrl"] || "/dashboard";
-        // this.returnUrl = this.route.snapshot.queryParams["returnUrl"] || "/opd/registration";
-
         this.returnUrl = this.route.snapshot.queryParams["returnUrl"] || "/dashboard";
         this.loadCaptcha();
     }
-
-    // convenience getter for easy access to form fields
     get f() {
         return this.loginForm.controls;
     }
-
-    // onSubmit() {
-    //     this.submitted = true;
-
-    //     // stop here if form is invalid
-    //     if (this.loginForm.invalid) {
-    //         return;
-    //     }
-
-    //     this.loading = true;
-    //     this.authenticationService
-    //         .login(this.f.username.value, this.f.password.value)
-    //         .subscribe(
-    //             (data) => {
-    //                 this.router.navigate([this.returnUrl]);
-    //             },
-    //             (error) => {
-    //                 this.errorMessage = error.error.message;
-    //             }
-    //         );
-    // }
-
     onSubmit() {
         this.submitted = true;
-
-        // stop here if form is invalid
+        this.obj = this.loginForm.value;
+        this.obj["CaptchaToken"] = this.captchaToken;
         if (this.loginForm.invalid) {
             return;
         }
-
-        this.loading = true;
-        
-        this.authenticationService.login(this.f.username.value, this.f.password.value).subscribe(
-                (data) => {
-                    this.authenticationService.getNavigationData(data.user.webRoleId);
-                    // console.log(this.configService.getConfigParam());
-                    this.router.navigate([this.returnUrl]);
-                },
-                (error) => {
-                    this.serverMonitoringService.showServerDownMessage();                    
-                    this.errorMessage = error.error.message;
-                }
-            );
+        this.authenticationService.login(this.obj).subscribe(
+            (data) => {
+                this.authenticationService.getNavigationData(data.WebRoleId);
+                this.router.navigate([this.returnUrl]);
+            }, (error) => {
+                this.serverMonitoringService.showServerDownMessage();
+                this.errorMessage = error.error.message;
+            }
+        );
     }
 }

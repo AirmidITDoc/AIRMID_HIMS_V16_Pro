@@ -61,11 +61,11 @@ export class AuthenticationService {
     }
 
 
-    getNavigationData(roleId) {
+    getNavigationData() {
         // if (this._fuseNavigationService.getNavigation("main1")) {
         //     return;
         // }
-        return this.http.GetData('login/get-menus?RoleId=' + roleId).subscribe((data: any[]) => {
+        return this.http.GetData('login/get-menus').subscribe((data: any[]) => {
             this.navigation = data;
             try {
                 this._fuseNavigationService.unregister('main1');

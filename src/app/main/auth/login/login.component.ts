@@ -80,7 +80,6 @@ export class LoginComponent implements OnInit {
         }
         this.authenticationService.login(this.obj).subscribe(
             (data) => {
-                this.authenticationService.getNavigationData(data.WebRoleId);
                 this.router.navigate([this.returnUrl]);
             }, (error) => {
                 this.serverMonitoringService.showServerDownMessage();

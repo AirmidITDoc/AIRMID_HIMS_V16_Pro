@@ -33,7 +33,7 @@ export class AuthenticationService {
         return this.currentUserSubject.value;
     }
     getCaptcha(): Observable<any> {
-        return this.http.GetData('Login/GetCaptcha');
+        return this.http.GetData('Login/GetCaptcha',false);
     }
 
     login(data: any): Observable<any> {
@@ -66,6 +66,7 @@ export class AuthenticationService {
         //     return;
         // }
         return this.http.GetData('login/get-menus').subscribe((data: any[]) => {
+            debugger
             this.navigation = data;
             try {
                 this._fuseNavigationService.unregister('main1');

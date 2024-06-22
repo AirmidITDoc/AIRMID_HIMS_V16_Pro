@@ -16,7 +16,6 @@ export class ApiCaller {
     GetData(url: string, passToken: boolean = true): Observable<any> {
         var httpOptions = {};
         if (passToken) {
-            debugger
             let currentUser=JSON.parse(localStorage.getItem("currentUser"));
             httpOptions = {
                 headers: new HttpHeaders({
